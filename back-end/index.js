@@ -14,7 +14,8 @@ server.use(bearerToken());
 // const { user } = require("./routers");
 // server.use("/users", user);
 
-console.log("login")
+console.log("login");
+console.log("register");
 server.listen(PORT, () => {
   // db.sequelize.sync({ alter: true });
   console.log("Success Running at PORT: " + PORT);
