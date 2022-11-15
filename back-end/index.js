@@ -11,6 +11,7 @@ server.use(cors());
 server.use(express.static("./Public"));
 server.use(bearerToken());
 
+console.log("test");
 // const { user } = require("./routers");
 // server.use("/users", user);
 
