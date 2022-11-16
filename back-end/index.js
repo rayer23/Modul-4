@@ -11,11 +11,10 @@ server.use(cors());
 server.use(express.static("./Public"));
 server.use(bearerToken());
 
-const { user } = require("./routers");
+const { user,book } = require("./routers");
 server.use("/users", user);
+server.use("/books", book);
 
-console.log("login");
-console.log("register");
 server.listen(PORT, () => {
   db.sequelize.sync({ alter: true });
   console.log("Success Running at PORT: " + PORT);
