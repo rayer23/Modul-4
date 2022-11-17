@@ -4,5 +4,5 @@ const book = require("./bookControllers");
 
 module.exports = {
   user,
-  book
+  book,
 };
