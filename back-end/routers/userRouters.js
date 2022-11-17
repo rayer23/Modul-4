@@ -5,7 +5,7 @@ const { verifyToken, checkRole } = require("../middleware/user");
 const { multerUpload } = require("../helpers/multer");
 
 router.post("/register", user.register);
-router.get("/login", user.login);
+router.post("/login", user.login);
 router.get("/keepLogin", user.keepLogin);
 router.post(
   "/single-uploaded/:id",

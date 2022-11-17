@@ -11,10 +11,10 @@ module.exports = {
   register: async (req, res) => {
     try {
       // console.log(req.body);
-      const { NIM, username, email, password, confirmPassword } =
-        req.body;
+      const { NIM, username, email, password, confirmPassword } = req.body;
 
-      if (password !== confirmPassword) throw "password lu salah";
+      if (password !== confirmPassword)
+        throw "your password is different than confirmPassword";
 
       if (password.length < 8) throw "Password min 8 character";
 
@@ -32,7 +32,7 @@ module.exports = {
       // console.log(data.id);
 
       const token = jwt.sign({ NIM: data.NIM }, process.env.SECRET_KEY, {
-        expiresIn: "1h",
+        expiresIn: "5h",
       });
 
       const tempEmail = fs.readFileSync("./template/email.html", "utf-8");
@@ -49,7 +49,10 @@ module.exports = {
         html: tempResult,
       });
 
-      res.status(200).send("Register Success");
+      res.status(200).send({
+        message: "Register Success",
+        data,
+      });
     } catch (err) {
       console.log(err);
       res.status(400).send(err);
@@ -71,7 +74,7 @@ module.exports = {
         },
         raw: true,
       });
-      // console.log(isUserExist);
+      console.log(isUserExist);
 
       if (!isUserExist) throw "User not found";
 
@@ -81,22 +84,26 @@ module.exports = {
         throw `Wrong Password !`;
       }
 
-      const token = jwt.sign({ 
+      const token = jwt.sign(
+        {
           NIM: isUserExist.NIM,
-          username: isUserExist.username, 
-          isAdmin : isUserExist.isAdmin,
-          isVerified:isUserExist.isVerified
-        },process.env.SECRET_KEY
+          username: isUserExist.username,
+          isAdmin: isUserExist.isAdmin,
+          isVerified: isUserExist.isVerified,
+        },
+        process.env.SECRET_KEY
       );
 
       res.status(200).send({
         user: {
           username: isUserExist.username,
           NIM: isUserExist.NIM,
+          email : isUserExist.email
         },
         token,
       });
     } catch (err) {
+      console.log(err)
       res.status(400).send(err);
     }
   },
