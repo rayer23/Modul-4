@@ -17,6 +17,6 @@ server.use("/users", user);
 server.use("/books", book);
 
 server.listen(PORT, () => {
-  // db.sequelize.sync({ alter: true });
+  db.sequelize.sync({ alter: true });
   console.log("Success Running at PORT: " + PORT);
 });
