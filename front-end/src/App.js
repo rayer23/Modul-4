@@ -37,7 +37,7 @@ function App() {
   useEffect(() => {
     keepLogin();
   });
-
+  console.log("test")
   return (
     <div>
       <Navbar />
