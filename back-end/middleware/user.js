@@ -25,6 +25,6 @@ module.exports = {
   },
   checkRole: async (req, res, next) => {
     if (req.user.isAdmin) return next();
-    res.status(400).send("Lo bukan admin");
+    res.status(400).send("You are not authorized to access this page");
   },
 };

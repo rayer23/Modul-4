@@ -1,14 +1,15 @@
 const express = require("express");
 const cors = require("cors");
-const PORT = 2000;
+require("dotenv").config();
 const server = express();
 const db = require("./models");
 const bearerToken = require("express-bearer-token");
-require("dotenv").config();
+
+const PORT = process.env.PORT;
 
 server.use(express.json());
 server.use(cors());
-server.use(express.static("./Public"));
+server.use(express.static("./upload"));
 server.use(bearerToken());
 
 const { user,book } = require("./routers");
