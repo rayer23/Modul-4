@@ -277,7 +277,7 @@ export default function HomePage() {
           }}
           size="sm"
           m="3px"
-          borderColor="blue.400"
+          borderColor="gray.400"
           borderRadius="6px"
           bg="white"
           borderWidth="2px"
@@ -302,7 +302,7 @@ export default function HomePage() {
           }}
           size="sm"
           m="3px"
-          borderColor="blue.400"
+          borderColor="gray.400"
           borderRadius="6px"
           bg="white"
           borderWidth="2px"

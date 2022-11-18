@@ -1,12 +1,10 @@
 import { Route, Routes } from "react-router-dom";
 
 import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
 import { VerificationPage } from "./pages/VerificationPage";
 import DetailPage from "./pages/DetailPage";
 
 import Navbar from "./components/navbar";
-import Navbar2 from "./components/navbar2";
 import { login } from "./redux/userSlice";
 
 import Axios from "axios";
@@ -45,10 +43,9 @@ function App() {
   console.log("test");
   return (
     <div>
-      <Navbar2 />
+      <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
         <Route path="/verification/:token" element={<VerificationPage />} />
         <Route path="/details/:id" element={<DetailPage />} />
 

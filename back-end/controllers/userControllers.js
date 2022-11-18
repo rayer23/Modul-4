@@ -99,9 +99,10 @@ module.exports = {
       );
 
       res.status(200).send({
-        message: "Login Success",
+              message: "Login Success",
               isUserExist,
-              token
+              token,
+          
       });
     } catch (err) {
       console.log(err)
