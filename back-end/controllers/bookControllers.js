@@ -130,7 +130,7 @@ module.exports = {
     try {
       const { page, limit, search_query, order, order_direction } = req.query;
       const booklist_page = parseInt(page) || 0;
-      const list_limit = parseInt(limit) || 10;
+      const list_limit = parseInt(limit) || 5;
       const search = search_query || "";
       const offset = list_limit * booklist_page;
       const orderby = order || "title";
@@ -191,6 +191,31 @@ module.exports = {
       });
     } catch (error) {
       res.status(400).send(error);
+    }
+  },
+  sortBy: async (req, res) => {
+    try {
+      const { data, order } = req.query;
+      const users = await book.findAll({
+        order: [[data, order]],
+      });
+      res.status(200).send(users);
+    } catch (err) {
+      console.log(err);
+      res.status(400).send(err);
+    }
+  },
+  details: async (req, res) => {
+    try {
+      const users = await book.findOne({
+        where: {
+          id: req.params.id,
+        },
+      });
+      res.status(200).send(users);
+    } catch (err) {
+      console.log(err);
+      res.status(400).send(err);
     }
   },
 };

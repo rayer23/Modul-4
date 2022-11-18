@@ -1,11 +1,15 @@
 import { Route, Routes } from "react-router-dom";
+
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
+import { VerificationPage } from "./pages/VerificationPage";
+import DetailPage from "./pages/DetailPage";
+
 import Navbar from "./components/navbar";
-import Axios from "axios";
+import Navbar2 from "./components/navbar2";
 import { login } from "./redux/userSlice";
 
+import Axios from "axios";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import "./App.css";
@@ -16,7 +20,7 @@ function App() {
 
   const keepLogin = async () => {
     try {
-      const res = await Axios.get(`http://localhost:2000/user/keepLogin`, {
+      const res = await Axios.get(`http://localhost:2000/users/keepLogin`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -27,6 +31,7 @@ function App() {
           NIM: res.data.NIM,
           username: res.data.username,
           email: res.data.email,
+          isVerified: res.data.isVerified,
         })
       );
     } catch (err) {
@@ -37,14 +42,16 @@ function App() {
   useEffect(() => {
     keepLogin();
   });
-  console.log("test")
+  console.log("test");
   return (
     <div>
-      <Navbar />
+      <Navbar2 />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/verification/:token" element={<VerificationPage />} />
+        <Route path="/details/:id" element={<DetailPage />} />
+
       </Routes>
     </div>
   );

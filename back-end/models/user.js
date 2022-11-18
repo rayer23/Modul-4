@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      User.hasOne(models.Profile)
+
     }
   }
   User.init(
@@ -16,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       NIM: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        unique: true,
+        unique: "NIM",
         primaryKey:true
       },
       username: {
@@ -42,6 +44,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      code_otp: {
+        type: DataTypes.STRING
+    },
     },
     {
       sequelize,

@@ -40,6 +40,7 @@ function LoginPage() {
           NIM: result.data.NIM,
           username: result.data.username,
           email: result.data.email,
+          isVerified: result.data.isUserExist.isVerified,
         })
       );
       localStorage.setItem("token", result.data.token);
@@ -60,6 +61,7 @@ function LoginPage() {
       });
     }
   };
+  
   return move ? (
     <Navigate to="/" replace={true} />
   ) : (

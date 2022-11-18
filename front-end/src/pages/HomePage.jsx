@@ -27,26 +27,34 @@ import { RiSearchEyeFill, RiRestartFill } from "react-icons/ri";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import ReactPaginate from "react-paginate";
+import { Link } from "react-router-dom";
 
-export default function BookCard() {
-  const [limit, setLimit] = useState(10);
+export default function HomePage() {
+  const [limit, setLimit] = useState(5);
   const [searchProduct, setSearchProduct] = useState("");
-  const [page, setPage] = useState(0);
-  const [totalPage, setTotalPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState();
   const [order, setOrder] = useState("title");
   const [order_direction, setOrder_direction] = useState("ASC");
 
   const dispatch = useDispatch();
   const data = useSelector((state) => state.bookSlice.value);
 
-  const url = `http://localhost:2000/books/search?search_query=${searchProduct}&page=${page}&limit=${limit}&order=${
-    order ? order : `title`
-  }&order_direction=${order_direction ? order_direction : "ASC"}`;
+  const url = `http://localhost:2000/books/search?search_query=${searchProduct}&page=${
+    page - 1
+  }&limit=${limit}&order=${order ? order : `id`}&order_direction=${
+    order_direction ? order_direction : "ASC"
+  }`;
+
+  // const url = `http://localhost:2000/books/search?search_query=${searchProduct}&page=${page}&limit=${limit}&order=${
+  //   order ? order : `id`
+  // }&order_direction=${order_direction ? order_direction : "ASC"}`;
 
   const getData = async () => {
     try {
       const res = await Axios.get(url);
       dispatch(syncData(res.data.result));
+      setTotalPage(Math.ceil(res.data.totalRows / res.data.limit));
     } catch (err) {
       console.log(err);
     }
@@ -208,6 +216,8 @@ export default function BookCard() {
                 _hover={{ boxShadow: "xl" }}
                 boxShadow="base"
                 borderRadius="10px"
+                as={Link}
+                to={`/details/${item.id}`}
               >
                 <Box
                   h="240px"
@@ -254,15 +264,54 @@ export default function BookCard() {
         </Flex>
       </Center>
 
-      {/* <ReactPaginate
-        breakLabel="..."
-        nextLabel="next >"
-        // onPageChange={handlePageClick}
-        pageRangeDisplayed={5}
-        pageCount={10}
-        previousLabel="< previous"
-        renderOnZeroPageCount={null}
-    /> */}
+      <Box display="flex" justifyContent="center" alignContent="center">
+        <Button
+          onClick={() => {
+            async function submit() {
+              setPage(page === 1 ? 1 : page - 1);
+            }
+            submit();
+            var pageNow = page - 1;
+            pageNow = pageNow <= 0 ? 1 : pageNow;
+            document.getElementById("pagingInput").value = parseInt(pageNow);
+          }}
+          size="sm"
+          m="3px"
+          borderColor="blue.400"
+          borderRadius="6px"
+          bg="white"
+          borderWidth="2px"
+          bgColor="inherit"
+          _hover={{ bg: "silver" }}
+        >
+          Prev
+        </Button>
+        <Text alignSelf="center" mx="5px">
+          {" "}
+          {page} of {totalPage}
+        </Text>
+        <Button
+          onClick={() => {
+            async function submit() {
+              setPage(totalPage === page ? page : page + 1);
+            }
+            submit();
+            var pageNow = page + 1;
+            pageNow = pageNow > totalPage ? page : pageNow;
+            document.getElementById("pagingInput").value = parseInt(pageNow);
+          }}
+          size="sm"
+          m="3px"
+          borderColor="blue.400"
+          borderRadius="6px"
+          bg="white"
+          borderWidth="2px"
+          bgColor="inherit"
+          _hover={{ bg: "silver" }}
+        >
+          Next
+        </Button>
+      </Box>
     </>
   );
 }
