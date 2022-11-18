@@ -98,19 +98,21 @@ module.exports = {
         user: {
           username: isUserExist.username,
           NIM: isUserExist.NIM,
-          email : isUserExist.email
+          email: isUserExist.email,
         },
         token,
+        message: "Welcome back!",
       });
     } catch (err) {
-      console.log(err)
+      console.log(err);
       res.status(400).send(err);
     }
   },
   keepLogin: async (req, res) => {
     try {
+      console.log(req.token);
       const verify = jwt.verify(req.token, process.env.SECRET_KEY);
-      // console.log(verify);
+      console.log(verify);
       const result = await user.findAll({
         where: {
           NIM: verify.NIM,
@@ -120,6 +122,7 @@ module.exports = {
       res.status(200).send({
         NIM: result[0].NIM,
         username: result[0].username,
+        email: result[0].email,
       });
     } catch (err) {
       res.status(400).send(err);

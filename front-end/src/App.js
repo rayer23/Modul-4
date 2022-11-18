@@ -16,11 +16,13 @@ function App() {
 
   const keepLogin = async () => {
     try {
-      const res = await Axios.get(`http://localhost:2000/user/keepLogin`, {
+      const res = await Axios.get(`http://localhost:2000/users/keepLogin`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      console.log(res.data);
 
       dispatch(
         login({
@@ -37,7 +39,7 @@ function App() {
   useEffect(() => {
     keepLogin();
   });
-  console.log("test")
+  console.log("test");
   return (
     <div>
       <Navbar />

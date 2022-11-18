@@ -3,7 +3,8 @@ import userSlice from "./userSlice";
 import bookSlice from "./bookSlice";
 
 export default configureStore({
-    reducer: {
-        userSlice, bookSlice
-    },
+  reducer: {
+    userSlice,
+    bookSlice,
+  },
 });
