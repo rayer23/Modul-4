@@ -1,7 +1,7 @@
 const db = require("../models");
 const bcrypt = require("bcrypt");
 const user = db.User;
-const profile = db.Profile
+const profile = db.Profile;
 const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const transporter = require("../helpers/transporter");
@@ -32,8 +32,8 @@ module.exports = {
       });
       // console.log(data.id);
       await profile.create({
-        UserNIM: NIM
-      })
+        UserNIM: NIM,
+      });
       const token = jwt.sign({ NIM: data.NIM }, process.env.SECRET_KEY, {
         expiresIn: "3d",
       });
@@ -55,7 +55,7 @@ module.exports = {
       res.status(200).send({
         message: "Register Success",
         data,
-        token
+        token,
       });
     } catch (err) {
       console.log(err);
@@ -70,7 +70,6 @@ module.exports = {
       const isUserExist = await user.findOne({
         where: {
           [Op.or]: {
-            // NIM: data,
             NIM: data ? data : "",
             // username: data ? data : "",
             // email: data ? data : "",
@@ -99,13 +98,12 @@ module.exports = {
       );
 
       res.status(200).send({
-              message: "Login Success",
-              isUserExist,
-              token,
-          
+        message: "Login Success",
+        isUserExist,
+        token,
       });
     } catch (err) {
-      console.log(err)
+      console.log(err);
       res.status(400).send(err);
     }
   },
@@ -115,19 +113,19 @@ module.exports = {
       // console.log(verify);
       const result = await user.findOne({
         where: {
-            NIM: verify.NIM,
+          NIM: verify.NIM,
         },
         raw: true,
-    });
-    
-    const isProfileExist = await db.Profile.findOne({
-        where: {
-            UserNIM: result.NIM
-        },
-        raw: true,
-    });
+      });
 
-    result.profilePic = isProfileExist.profilePic
+      const isProfileExist = await db.Profile.findOne({
+        where: {
+          UserNIM: result.NIM,
+        },
+        raw: true,
+      });
+
+      result.profilePic = isProfileExist.profilePic;
 
       res.status(200).send(result);
     } catch (err) {
@@ -167,82 +165,87 @@ module.exports = {
   // },
   verification: async (req, res) => {
     try {
-        const { code_otp } = req.body;
-        console.log(req.body)
-        const isAccountExist = await user.findOne({
-            where: {
-                NIM: req.user.NIM
-            },
-            raw: true,
-        });
+      const { code_otp } = req.body;
+      console.log(req.body);
+      const isAccountExist = await user.findOne({
+        where: {
+          NIM: req.user.NIM,
+        },
+        raw: true,
+      });
 
-        const isValid = await bcrypt.compare(code_otp, isAccountExist.code_otp);
+      const isValid = await bcrypt.compare(code_otp, isAccountExist.code_otp);
 
-        if(!isValid) throw `your code otp incorrect...`
+      if (!isValid) throw `Wrong Code !`;
 
-
-        await user.update({ isVerified: true },
+      await user.update(
+        { isVerified: true },
         {
-            where: {
-                NIM: req.user.NIM
-            }
+          where: {
+            NIM: req.user.NIM,
+          },
         }
-        );
-        res.status(200).send({
-            message: "Success Verification",
-            data: isAccountExist
-        });
+      );
+      res.status(200).send({
+        message: "Success Verification",
+        data: isAccountExist,
+      });
     } catch (err) {
-        console.log(err);
-        res.status(400).send(err);
+      console.log(err);
+      res.status(400).send(err);
     }
-},
-changeOtp: async (req, res) => {
-  try {
+  },
+  changeOtp: async (req, res) => {
+    try {
       const { NIM } = req.body;
-      
-      const code_otp = Math.floor(100000 + Math.random() * 900000).toString()
+
+      const code_otp = Math.floor(100000 + Math.random() * 900000).toString();
 
       const salt = await bcrypt.genSalt(10);
       const hashOtp = await bcrypt.hash(code_otp, salt);
-  
-      const data = await user.update({ code_otp: hashOtp }, {
+
+      const data = await user.update(
+        { code_otp: hashOtp },
+        {
           where: {
-              NIM
-          }
-      })
+            NIM,
+          },
+        }
+      );
 
       const isAccountExist = await user.findOne({
-          where: { NIM },
-          raw: true,
+        where: { NIM },
+        raw: true,
       });
 
-      const token = jwt.sign({ NIM }, process.env.SECRET_KEY, { expiresIn: "1h" });
+      const token = jwt.sign({ NIM }, process.env.SECRET_KEY, {
+        expiresIn: "1h",
+      });
 
       const tempEmail = fs.readFileSync("./template/email.html", "utf-8");
       const tempCompile = handlebars.compile(tempEmail);
       const tempResult = tempCompile({
-          username: isAccountExist.username,
-          code_otp,
+        username: isAccountExist.username,
+        code_otp,
       });
 
       await transporter.sendMail({
-          from: "Admin",
-          to: isAccountExist.email,
-          subject: "Verification Account",
-          html: tempResult
-      })
+        from: "Admin",
+        to: isAccountExist.email,
+        subject: "Verification Account",
+        html: tempResult,
+      });
 
       res.status(200).send({
-          message: "Check Your Email, code otp send success",
-          data,
-          token
+        message: "Check Your Email, code otp send success",
+        data,
+        token,
       });
-  } catch (err) {
+    } catch (err) {
       console.log(err);
       res.status(400).send(err);
-  }
-},
+    }
+  },
   findAllUser: async (req, res) => {
     try {
       const users = await user.findAll();

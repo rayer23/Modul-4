@@ -15,6 +15,6 @@ router.get("/keepLogin", user.keepLogin);
 router.post("/verification", verifyToken, user.verification);
 router.post("/changeotp", user.changeOtp);
 
-// router.get("/", verifyToken, checkRole, user.findAllUser);
+router.get("/alluser", user.findAllUser);
 
 module.exports = router;

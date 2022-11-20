@@ -14,8 +14,8 @@ module.exports = {
       let verifiedUser = jwt.verify(token, process.env.SECRET_KEY);
 
       if (!verifiedUser) throw "Verify token failed";
-      // console.log(verifiedUser)
-      req.user = verifiedUser;
+      console.log(verifiedUser)
+      req.admin = verifiedUser;
 
       next();
     } catch (err) {
@@ -24,7 +24,7 @@ module.exports = {
     }
   },
   checkRole: async (req, res, next) => {
-    if (req.user.isAdmin) return next();
+    if (req.admin.isValid) return next();
     res.status(400).send("You are not authorized to access this page");
   },
 };

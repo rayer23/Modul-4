@@ -1,11 +1,15 @@
 const db = require("../models");
-const bcrypt = require("bcrypt");
-const book = db.Book;
+// const bcrypt = require("bcrypt");
 const { Op } = require("sequelize");
-const jwt = require("jsonwebtoken");
-const transporter = require("../helpers/transporter");
-const fs = require("fs");
-const handlebars = require("handlebars");
+// const jwt = require("jsonwebtoken");
+// const transporter = require("../helpers/transporter");
+// const fs = require("fs");
+// const handlebars = require("handlebars");
+const user = db.User;
+const cart = db.Cart;
+const book = db.Book;
+const admin = db.Admin;
+
 module.exports = {
   findAll: async (req, res) => {
     try {
@@ -131,26 +135,26 @@ module.exports = {
       const { page, limit, search_query, order, order_direction } = req.query;
       const booklist_page = parseInt(page) || 0;
       const list_limit = parseInt(limit) || 5;
-      const search = search_query || "";
+      const search = search_query || '';
       const offset = list_limit * booklist_page;
-      const orderby = order || "title";
-      const direction = order_direction || "ASC";
+      const orderby = order || 'Title';
+      const direction = order_direction || 'ASC';
       const totalRows = await book.count({
         where: {
           [Op.or]: [
             {
-              title: {
-                [Op.like]: "%" + search + "%",
+              Title: {
+                [Op.like]: '%' + search + '%',
               },
             },
             {
-              author: {
-                [Op.like]: "%" + search + "%",
+              Author: {
+                [Op.like]: '%' + search + '%',
               },
             },
             {
-              publisher: {
-                [Op.like]: "%" + search + "%",
+              Publisher: {
+                [Op.like]: '%' + search + '%',
               },
             },
           ],
@@ -158,21 +162,27 @@ module.exports = {
       });
       const totalPage = Math.ceil(totalRows / limit);
       const result = await book.findAll({
+        include: [
+          {
+            model: cart,
+            attributes: ["id", "UserNIM"],
+          }
+        ],
         where: {
           [Op.or]: [
             {
-              title: {
-                [Op.like]: "%" + search + "%",
+              Title: {
+                [Op.like]: '%' + search + '%',
               },
             },
             {
-              author: {
-                [Op.like]: "%" + search + "%",
+              Author: {
+                [Op.like]: '%' + search + '%',
               },
             },
             {
-              publisher: {
-                [Op.like]: "%" + search + "%",
+              Publisher: {
+                [Op.like]: '%' + search + '%',
               },
             },
           ],
@@ -180,9 +190,15 @@ module.exports = {
         offset: offset,
         limit: list_limit,
         order: [[orderby, direction]],
+        include: [
+          {
+            model: cart,
+            attributes: ["id", "UserNIM"],
+          }
+        ],
       });
 
-      res.status(200).json({
+      res.status(200).send({
         result: result,
         page: booklist_page,
         limit: list_limit,
