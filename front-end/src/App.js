@@ -40,6 +40,7 @@ function App() {
       );
       dispatch(loanSync(loan.data));
 
+
       dispatch(
         login({
           NIM: res.data.NIM,

@@ -26,10 +26,30 @@ import {
   MenuItem,
 } from "@chakra-ui/react";
 import {
+
+  Box,
+  Flex,
+  Text,
+  IconButton,
+  Button,
+  Stack,
+  Collapse,
+  Icon,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  useColorModeValue,
+  useBreakpointValue,
+  useDisclosure,
+} from "@chakra-ui/react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+
   HamburgerIcon,
   CloseIcon,
   ChevronDownIcon,
   ChevronRightIcon,
+
   MoonIcon,
   SunIcon,
 } from "@chakra-ui/icons";
@@ -58,12 +78,14 @@ export default function NavbarComp() {
   let [token, setToken] = useState("");
   let navigate = useNavigate();
 
+
   const onLogout = () => {
     dispatch(logout());
     dispatch(cartDel())
     dispatch(loanDel())
     localStorage.removeItem("token");
   };
+
 
   const onVerification = async () => {
     try {
@@ -95,6 +117,7 @@ export default function NavbarComp() {
     }
   };
 
+
   return (
     <Box>
       <Flex
@@ -109,6 +132,7 @@ export default function NavbarComp() {
         align={"center"}
       >
         <Flex
+
           as={Link2}
           to="/"
           flex={{ base: 2 }}
@@ -187,6 +211,7 @@ export default function NavbarComp() {
             aria-label={"Toggle Navigation"}
           />
         </Flex>
+
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
@@ -202,6 +227,7 @@ const DesktopNav = () => {
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
 
   return (
+
     <>
       <Stack direction={"row"} spacing={4}>
         {NAV_ITEMS.map((navItem) => (
@@ -244,6 +270,7 @@ const DesktopNav = () => {
         ))}
       </Stack>
     </>
+
   );
 };
 
@@ -268,6 +295,7 @@ const DesktopSubNav = ({ label, href, subLabel }) => {
           </Text>
           <Text fontSize={"sm"}>{subLabel}</Text>
         </Box>
+
         <Flex
           transition={"all .3s ease"}
           transform={"translateX(-10px)"}
@@ -416,32 +444,19 @@ const MobileNavItem = ({ label, children, href }) => {
   return (
     <>
       <Stack spacing={4} onClick={children && onToggle}>
+
         <Flex
-          py={2}
-          as={Link}
-          href={href ?? "#"}
-          justify={"space-between"}
+          transition={"all .3s ease"}
+          transform={"translateX(-10px)"}
+          opacity={0}
+          _groupHover={{ opacity: "100%", transform: "translateX(0)" }}
+          justify={"flex-end"}
           align={"center"}
-          _hover={{
-            textDecoration: "none",
-          }}
+          flex={1}
         >
-          <Text
-            fontWeight={600}
-            color={useColorModeValue("gray.600", "gray.200")}
-          >
-            {label}
-          </Text>
-          {children && (
-            <Icon
-              as={ChevronDownIcon}
-              transition={"all .25s ease-in-out"}
-              transform={isOpen ? "rotate(180deg)" : ""}
-              w={6}
-              h={6}
-            />
-          )}
+          <Icon color={"pink.400"} w={5} h={5} as={ChevronRightIcon} />
         </Flex>
+
 
         <Collapse in={isOpen} animateOpacity>
           <Stack
@@ -461,6 +476,7 @@ const MobileNavItem = ({ label, children, href }) => {
         </Collapse>
       </Stack>
     </>
+
   );
 };
 

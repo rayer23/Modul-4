@@ -11,10 +11,12 @@ export default configureStore({
   reducer: {
     userSlice,
     bookSlice,
+
     adminSlice,
     listSlice,
     nameSlice,
     cartSlice,
     loanSlice,
+
   },
 });
