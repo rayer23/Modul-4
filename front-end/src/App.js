@@ -29,11 +29,13 @@ function App() {
         },
       });
 
+
       const result = await Axios.get(`http://localhost:2000/carts/${res.data.NIM}`);
       dispatch(syncData(result.data))
 
       const loan = await Axios.get(`http://localhost:2000/loans/${res.data.NIM}`);
       dispatch(loanData(loan.data))
+
 
       dispatch(
         login({
@@ -70,6 +72,10 @@ const keepLoginAdmin = async () => {
   useEffect(() => {
     NIM === 0 ? keepLogin() : keepLoginAdmin();
   });
+
+
+  console.log("test");
+
   return (
     <div>
       <Routes>

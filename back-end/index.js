@@ -12,7 +12,9 @@ server.use(cors());
 server.use(express.static("./upload"));
 server.use(bearerToken());
 
+
 const { user,book,cart,admin } = require("./routers");
+
 server.use("/users", user);
 server.use("/books", book);
 server.use("/carts", cart);

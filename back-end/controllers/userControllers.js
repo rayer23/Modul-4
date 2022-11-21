@@ -98,9 +98,12 @@ module.exports = {
       );
 
       res.status(200).send({
+
         message: "Login Success",
         isUserExist,
+
         token,
+        message: "Welcome back!",
       });
     } catch (err) {
       console.log(err);
@@ -109,20 +112,25 @@ module.exports = {
   },
   keepLogin: async (req, res) => {
     try {
+      console.log(req.token);
       const verify = jwt.verify(req.token, process.env.SECRET_KEY);
+
       // console.log(verify);
       const result = await user.findOne({
+
         where: {
           NIM: verify.NIM,
         },
         raw: true,
       });
 
+
       const isProfileExist = await db.Profile.findOne({
         where: {
           UserNIM: result.NIM,
         },
         raw: true,
+
       });
 
       result.profilePic = isProfileExist.profilePic;
