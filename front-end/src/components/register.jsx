@@ -60,9 +60,11 @@ export const Register = () => {
 
       dispatch(
         login({
-          NIM: result.data.NIM,
-          username: result.data.username,
-          email: result.data.email,
+          NIM: result.data.data.NIM,
+          username: result.data.data.username,
+          email: result.data.data.email,
+            isVerified: result.data.data.isVerified,
+
         })
       );
 
@@ -204,7 +206,7 @@ export const Register = () => {
                           </FormControl>
                           <ModalFooter>
                             <Button type="submit" colorScheme="blue" mr={3}>
-                              Sign up
+                              Register
                             </Button>
                             <Button onClick={onClose}>Cancel</Button>
                           </ModalFooter>
