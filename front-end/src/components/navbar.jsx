@@ -26,30 +26,10 @@ import {
   MenuItem,
 } from "@chakra-ui/react";
 import {
-
-  Box,
-  Flex,
-  Text,
-  IconButton,
-  Button,
-  Stack,
-  Collapse,
-  Icon,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  useColorModeValue,
-  useBreakpointValue,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { Link, useNavigate } from "react-router-dom";
-import {
-
   HamburgerIcon,
   CloseIcon,
   ChevronDownIcon,
   ChevronRightIcon,
-
   MoonIcon,
   SunIcon,
 } from "@chakra-ui/icons";
