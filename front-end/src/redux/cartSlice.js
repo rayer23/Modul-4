@@ -6,16 +6,16 @@ export const cartSlice = createSlice({
             value: [],
         },
     reducers: {
-        syncData: (state, action) => {
+        cartSync: (state, action) => {
         state.value = action.payload;
         },
-        delData: (state) => {
+        cartDel: (state) => {
             state.value = []
         },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { syncData, delData } = cartSlice.actions;
+export const { cartSync, cartDel } = cartSlice.actions;
 
 export default cartSlice.reducer;

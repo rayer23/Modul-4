@@ -9,7 +9,7 @@ module.exports = {
         try {
             const { BookId, UserNIM } = req.body;
 
-            if (!UserNIM) throw "Login Please";
+            if (!UserNIM) throw "Need to login for add cart";
 
             const data = await cart.create({
                 BookId,
@@ -17,7 +17,7 @@ module.exports = {
             })
 
             res.status(200).send({
-                message: "Add To Cart Succes",
+                message: "Add To Cart Success",
                 data
             });
 
@@ -36,7 +36,7 @@ module.exports = {
             });
 
             res.status(200).send({
-                message: "Delete Cart Succes",
+                message: "Delete Cart Success",
                 data
             });
         } catch (err) {

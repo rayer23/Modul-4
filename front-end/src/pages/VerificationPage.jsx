@@ -19,6 +19,8 @@ export const VerificationPage = () => {
   const otp4 = useRef("");
   const otp5 = useRef("");
   const otp6 = useRef("");
+  localStorage.getItem("token");
+
 
   const dispatch = useDispatch();
 

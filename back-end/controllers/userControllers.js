@@ -28,9 +28,7 @@ module.exports = {
         username,
         email,
         password: hashPass,
-        // isAdmin :true
       });
-      // console.log(data.id);
       await profile.create({
         UserNIM: NIM,
       });
@@ -77,7 +75,7 @@ module.exports = {
         },
         raw: true,
       });
-      console.log(isUserExist);
+      // console.log(isUserExist);
 
       if (!isUserExist) throw "User not found";
 
@@ -132,48 +130,17 @@ module.exports = {
       res.status(400).send(err);
     }
   },
-  // uploadFile: async (req, res) => {
-  //   try {
-  //     let fileUploaded = req.file;
-  //     console.log("controller", fileUploaded);
-
-  //     await user.update(
-  //       {
-  //         profilePic: fileUploaded.filename,
-  //       },
-  //       {
-  //         where: {
-  //           NIM: req.params.id,
-  //         },
-  //       }
-  //     );
-  //     const getUser = await user.findOne({
-  //       where: {
-  //         NIM: req.params.id,
-  //       },
-  //       raw: true,
-  //     });
-  //     res.status(200).send({
-  //       NIM: getUser.NIM,
-  //       username: getUser.username,
-  //       profilePic: getUser.profilePic,
-  //     });
-  //   } catch (err) {
-  //     console.log(err);
-  //     res.status(400).send(err);
-  //   }
-  // },
   verification: async (req, res) => {
     try {
       const { code_otp } = req.body;
-      console.log(req.body);
+      // console.log(req.body);
       const isAccountExist = await user.findOne({
         where: {
           NIM: req.user.NIM,
         },
         raw: true,
       });
-
+      // console.log(isAccountExist)
       const isValid = await bcrypt.compare(code_otp, isAccountExist.code_otp);
 
       if (!isValid) throw `Wrong Code !`;

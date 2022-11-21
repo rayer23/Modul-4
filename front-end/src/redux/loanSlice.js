@@ -6,16 +6,16 @@ export const loanSlice = createSlice({
             value: [],
         },
     reducers: {
-        loanData: (state, action) => {
+        loanSync: (state, action) => {
         state.value = action.payload;
         },
-        delLoan: (state) => {
+        loanDel: (state) => {
             state.value = []
         },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { loanData, delLoan } = loanSlice.actions;
+export const { loanSync, loanDel } = loanSlice.actions;
 
 export default loanSlice.reducer;

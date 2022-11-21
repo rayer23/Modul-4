@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import React from "react";
 import Axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { syncData } from "../redux/listSlice";
-// import { addNew, edit, remove } from "../redux/editSlice";
 import {
   Image,
   Button,
@@ -32,14 +32,16 @@ import {
   useDisclosure,
   Heading,
 } from "@chakra-ui/react";
-import { IoCartOutline } from "react-icons/io5";
-import StatsComp from "../components/admin/stats";
-import { syncName } from "../redux/nameSlice";
-import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { logout } from "../redux/userSlice";
-import { useNavigate } from "react-router-dom";
-import AllBook from "../components/allbook";
 
+import { syncName } from "../redux/nameSlice";
+import { logoutAdmin } from "../redux/adminSlice";
+import { EditIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
+import { useNavigate } from "react-router-dom";
+import { DeleteIcon } from "@chakra-ui/icons";
+
+import AllBook from "../components/allbook";
+import CreateBook from "../components/admin/createbook";
+import Stats from "../components/admin/stats";
 
 export const AdminDashboard = () => {
   const dispatch = useDispatch();
@@ -49,10 +51,15 @@ export const AdminDashboard = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
+  const inputTitle = useRef("");
+  const inputAuthor = useRef("");
+  const inputPublisher = useRef("");
+  const inputGenre = useRef("");
+  const inputAbstract = useRef("");
 
   const onLogout = () => {
-    dispatch(logout());
-    localStorage.removeItem("token");
+    dispatch(logoutAdmin());
+    localStorage.removeItem("tokenAdmin");
     navigate("/admin");
   };
 
@@ -72,7 +79,7 @@ export const AdminDashboard = () => {
 
   const getUser = async () => {
     try {
-      const res = await Axios.get(`http://localhost:2000/users/alluser`);
+      const res = await Axios.get(`http://localhost:2000/users/allUser`);
       console.log(res.data);
       dispatch(syncName(res.data));
     } catch (err) {
@@ -83,6 +90,41 @@ export const AdminDashboard = () => {
   useEffect(() => {
     getUser();
   }, []);
+
+  const onDelete = async (id) => {
+    try {
+      const res = await Axios.delete(`http://localhost:2000/books/${id}`);
+      console.log(res);
+      getData();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const onUpdate = async (id) => {
+    try {
+      const updateBook = {
+        title: inputTitle.current.value,
+        author: inputAuthor.current.value,
+        publisher: inputPublisher.current.value,
+        genre: inputGenre.current.value,
+        sinopsis: inputAbstract.current.value,
+      };
+      console.log(updateBook);
+      let inputFromUser = prompt("Edit Here");
+      getData();
+      console.log(inputFromUser);
+
+      const res = await Axios.patch(
+        `http://localhost:2000/books/${id}`,
+        updateBook
+      );
+
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div>
@@ -123,8 +165,7 @@ export const AdminDashboard = () => {
                   </Center>
                   <br />
                   <MenuDivider />
-                  {/* <MenuItem>Your Servers</MenuItem> */}
-                  {/* <MenuItem>Account Settings</MenuItem> */}
+
                   <MenuItem onClick={onLogout}>Logout</MenuItem>
                 </MenuList>
               </Menu>
@@ -132,7 +173,8 @@ export const AdminDashboard = () => {
           </Flex>
         </Flex>
       </Box>
-      <StatsComp />
+      <Stats />
+
       <Stack mt="20px" mb="20px" ml="20px" mr="20px">
         <Box m="20px">
           <Heading align="center">Books</Heading>
@@ -144,19 +186,40 @@ export const AdminDashboard = () => {
                   <Th>Author</Th>
                   <Th>Genre</Th>
                   <Th>Publisher</Th>
+                  <Th>Stock</Th>
                   <Th>Images</Th>
+                  <Th>Actions</Th>
                 </Tr>
               </Thead>
               {data.map((item) => {
                 return (
                   <Tbody>
                     <Tr>
-                      <Td>{item.title}</Td>
+                      <Td>{item.Title}</Td>
                       <Td>{item.author}</Td>
                       <Td>{item.genre}</Td>
                       <Td>{item.publisher}</Td>
+                      <Td>{item.stock}</Td>
                       <Td>
                         <Image w="20px" h="20px" src={item.images}></Image>
+                      </Td>
+                      <Td>
+                        <Flex>
+                          <Button
+                            colorScheme="teal"
+                            onClick={() => onDelete(item.id)}
+                          >
+                            <DeleteIcon />
+                          </Button>
+                          <Button
+                            colorScheme="teal"
+                            display="flex"
+                            justifyContent=""
+                            onClick={() => onUpdate(item.id)}
+                          >
+                            <EditIcon />
+                          </Button>
+                        </Flex>
                       </Td>
                     </Tr>
                   </Tbody>
@@ -190,9 +253,93 @@ export const AdminDashboard = () => {
               })}
             </Table>
           </TableContainer>
-          <AllBook />
+          <CreateBook />
+
+          {/* <UpdateComp /> */}
+          <AllBook/>
         </Box>
       </Stack>
     </div>
   );
 };
+
+// return (
+//   <Flex
+//     minH={"100vh"}
+//     align={"center"}
+//     justify={"center"}
+//     bg={useColorModeValue("white.50", "white.800")}
+//   >
+//     <Stack
+//       spacing={4}
+//       w={"full"}
+//       maxW={"md"}
+//       bg={useColorModeValue("white", "white.700")}
+//       rounded={"xl"}
+//       boxShadow={"lg"}
+//       p={6}
+//       my={12}
+//     >
+//       <Heading
+//         lineHeight={1.1}
+//         fontSize={{ base: "2xl", sm: "3xl" }}
+//         textAlign="center"
+//       >
+//         Update Data Here
+//       </Heading>
+//       <Flex></Flex>
+//       <Flex>
+//         <FormControl id="title" isRequired>
+//           <FormLabel>Title</FormLabel>
+//           <Input
+//             _placeholder={{ color: "gray.500" }}
+//             type="text"
+//             ref={inputTitle}
+//           />
+//         </FormControl>
+//       </Flex>
+//       <FormControl id="author" isRequired>
+//         <FormLabel>Author</FormLabel>
+//         <Input
+//           _placeholder={{ color: "gray.500" }}
+//           type="author"
+//           ref={inputAuthor}
+//         />
+//       </FormControl>
+//       <FormControl id="publisher" isRequired>
+//         <FormLabel>Publisher</FormLabel>
+//         <Input
+//           _placeholder={{ color: "gray.500" }}
+//           type="publisher"
+//           ref={inputPublisher}
+//         />
+//       </FormControl>
+//       <FormControl id="genre" isRequired>
+//         <FormLabel>Genre</FormLabel>
+//         <Input
+//           _placeholder={{ color: "gray.500" }}
+//           type="genre"
+//           ref={inputGenre}
+//         />
+//       </FormControl>
+//       <FormControl id="abstract" isRequired>
+//         <FormLabel>Abstract</FormLabel>
+//         <Textarea _placeholder={{ color: "gray.500" }} ref={inputAbstract} />
+//       </FormControl>
+
+//       <Stack spacing={6} direction={["column", "row"]}>
+//         <Button
+//           bg={"blue.400"}
+//           color={"white"}
+//           w="full"
+//           _hover={{
+//             bg: "blue.500",
+//           }}
+//           onClick={onUpdate}
+//         >
+//           Submit
+//         </Button>
+//       </Stack>
+//     </Stack>
+//   </Flex>
+// );
