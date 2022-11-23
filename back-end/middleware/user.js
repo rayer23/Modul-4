@@ -15,8 +15,10 @@ module.exports = {
 
       if (!verifiedUser) throw "Verify token failed";
       console.log(verifiedUser)
+
       // req.admin = verifiedUser;
       req.user = verifiedUser;
+
 
       next();
     } catch (err) {
@@ -24,8 +26,10 @@ module.exports = {
       res.status(400).send(err);
     }
   },
+
   // checkRole: async (req, res, next) => {
   //   if (req.admin.isValid) return next();
   //   res.status(400).send("You are not authorized to access this page");
   // },
+
 };

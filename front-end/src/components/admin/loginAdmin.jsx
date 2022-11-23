@@ -4,6 +4,8 @@ import {
   FormControl,
   FormLabel,
   Input,
+
+
   Stack,
   Link,
   Button,
@@ -12,33 +14,42 @@ import {
   useColorModeValue,
   useDisclosure,
   useColorMode,
+
+
   Collapse,
   Avatar,
   MenuList,
   MenuItem,
   Menu,
   MenuButton,
+
   Icon,
   Badge,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
+
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Axios from "axios";
 import Swal from "sweetalert2";
+
 import { loginAdmin } from "../../redux/adminSlice";
+
 import { useNavigate } from "react-router-dom";
 const url = "http://localhost:2000/admins/login";
 
 export default function LoginAdmin() {
   const { username } = useSelector((state) => state.userSlice.value);
+
   const { isOpen, onToggle, onClose, onOpen } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
   const tokenlocalstorage = localStorage.getItem("tokenAdmin");
+
   const dispatch = useDispatch();
   const inputUsername = useRef("");
   const inputPASS = useRef("");
   const navigate = useNavigate();
+
 
   const onLogin = async (data) => {
     data.preventDefault();
@@ -75,6 +86,7 @@ export default function LoginAdmin() {
 
   return (
     <Box>
+
       <Flex
         minH={"100vh"}
         align={"center"}
@@ -83,7 +95,9 @@ export default function LoginAdmin() {
       >
         <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
           <Stack align={"center"}>
+
             <Heading fontSize={"4xl"}>Admin Page</Heading>
+
           </Stack>
           <Box
             rounded={"lg"}
@@ -106,12 +120,14 @@ export default function LoginAdmin() {
                   align={"start"}
                   justify={"space-between"}
                 >
+
                   {/* <Link color={"blue.400"}>
                     Forgot password?
                     <Badge ml="1" fontSize="0.8em" colorScheme="green">
                       Coming Soon
                     </Badge>
                   </Link> */}
+
                 </Stack>
                 <Button
                   bg={"blue.400"}
@@ -131,3 +147,204 @@ export default function LoginAdmin() {
     </Box>
   );
 }
+
+
+const DesktopNav = () => {
+  const linkColor = useColorModeValue("gray.600", "gray.200");
+  const linkHoverColor = useColorModeValue("gray.800", "white");
+  const popoverContentBgColor = useColorModeValue("white", "gray.800");
+
+  return (
+    <>
+      {/* <Stack direction={"row"} spacing={4}>
+          {NAV_ITEMS.map((navItem) => (
+            <Box key={navItem.label}>
+              <Popover trigger={"hover"} placement={"bottom-start"}>
+                <PopoverTrigger>
+                  <Link
+                    p={2}
+                    href={navItem.href ?? "#"}
+                    fontSize={"sm"}
+                    fontWeight={500}
+                    color={linkColor}
+                    _hover={{
+                      textDecoration: "none",
+                      color: linkHoverColor,
+                    }}
+                  >
+                    {navItem.label}
+                  </Link>
+                </PopoverTrigger>
+  
+                {navItem.children && (
+                  <PopoverContent
+                    border={0}
+                    boxShadow={"xl"}
+                    bg={popoverContentBgColor}
+                    p={4}
+                    rounded={"xl"}
+                    minW={"sm"}
+                  >
+                    <Stack>
+                      {navItem.children.map((child) => (
+                        <DesktopSubNav key={child.label} {...child} />
+                      ))}
+                    </Stack>
+                  </PopoverContent>
+                )}
+              </Popover>
+            </Box>
+          ))}
+        </Stack> */}
+    </>
+  );
+};
+
+const MobileNav = () => {
+  const tokenlocalstorage = localStorage.getItem("token");
+  const { username } = useSelector((state) => state.userSlice.value);
+  const dispatch = useDispatch();
+  const inputUsername = useRef("");
+  const inputPASS = useRef("");
+  // let [token, setToken] = useState("")
+
+  const onLogout = () => {
+    dispatch(logout());
+    localStorage.removeItem("token");
+  };
+
+  const onLogin = async () => {
+    try {
+      const user = {
+        password: inputPASS.current.value,
+        username: inputUsername.current.value,
+      };
+
+      console.log(user);
+
+      const result = await Axios.post(url, user);
+
+      dispatch(
+        login({
+          username: result.data.isUserExist.username,
+          email: result.data.isUserExist.email,
+        })
+      );
+
+      localStorage.setItem("token", result.data.token);
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: `${err.response.data}`,
+        timer: 1000,
+        customClass: {
+          container: "my-swal",
+        },
+      });
+    }
+  };
+
+  return (
+    <>
+      <Stack
+        bg={useColorModeValue("white", "gray.800")}
+        pr={4}
+        pl={4}
+        display={{ md: "none" }}
+      >
+        {tokenlocalstorage ? (
+          <Menu>
+            <MenuButton>
+              <Flex>
+                <Avatar
+                  size="sm"
+                  src="https://avatars.dicebear.com/api/male/username.svg"
+                />
+                <Box ml="3">
+                  <Text fontWeight="bold">{username}</Text>
+                </Box>
+              </Flex>
+            </MenuButton>
+            <MenuList alignItems={"center"}>
+              <MenuItem>Profile</MenuItem>
+              <MenuItem onClick={onLogout}>Log Out</MenuItem>
+            </MenuList>
+          </Menu>
+        ) : (
+          <Stack justify={"flex-end"}>
+            <FormControl id="Username">
+              <Input type="text" placeholder="Username" ref={inputUsername} />
+            </FormControl>
+            <FormControl id="Password">
+              <Input type="password" placeholder="Password" ref={inputPASS} />
+            </FormControl>
+
+            <Stack direction="row">
+              <Button fontSize={"sm"} fontWeight={600} onClick={onLogin}>
+                Sign In
+              </Button>
+            </Stack>
+          </Stack>
+        )}
+      </Stack>
+    </>
+  );
+};
+
+const MobileNavItem = ({ label, children, href }) => {
+  const { isOpen, onToggle } = useDisclosure();
+
+  return (
+    <>
+      <Stack spacing={4} onClick={children && onToggle}>
+        <Flex
+          py={2}
+          as={Link}
+          href={href ?? "#"}
+          justify={"space-between"}
+          align={"center"}
+          _hover={{
+            textDecoration: "none",
+          }}
+        >
+          <Text
+            fontWeight={600}
+            color={useColorModeValue("gray.600", "gray.200")}
+          >
+            {label}
+          </Text>
+          {children && (
+            <Icon
+              as={ChevronDownIcon}
+              transition={"all .25s ease-in-out"}
+              transform={isOpen ? "rotate(180deg)" : ""}
+              w={6}
+              h={6}
+            />
+          )}
+        </Flex>
+
+        <Collapse in={isOpen} animateOpacity>
+          <Stack
+            pl={4}
+            borderLeft={1}
+            borderStyle={"solid"}
+            borderColor={useColorModeValue("gray.200", "gray.700")}
+            align={"start"}
+          >
+            {children &&
+              children.map((child) => (
+                <Link key={child.label} href={child.href}>
+                  {child.label}
+                </Link>
+              ))}
+          </Stack>
+        </Collapse>
+      </Stack>
+    </>
+  );
+};
+
+
+

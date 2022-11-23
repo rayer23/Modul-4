@@ -29,6 +29,7 @@ module.exports = {
         email,
         password: hashPass,
       });
+
       await profile.create({
         UserNIM: NIM,
       });
@@ -138,17 +139,21 @@ module.exports = {
       res.status(400).send(err);
     }
   },
+
   verification: async (req, res) => {
     try {
       const { code_otp } = req.body;
       // console.log(req.body);
+
       const isAccountExist = await user.findOne({
         where: {
           NIM: req.user.NIM,
         },
         raw: true,
       });
+
       // console.log(isAccountExist)
+
       const isValid = await bcrypt.compare(code_otp, isAccountExist.code_otp);
 
       if (!isValid) throw `Wrong Code !`;

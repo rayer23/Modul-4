@@ -3,10 +3,12 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   value: {
     username: "",
+
   },
 };
 
 export const adminSlice = createSlice({
+
   name: "admin",
   initialState,
   reducers: {
@@ -15,9 +17,12 @@ export const adminSlice = createSlice({
     },
     logoutAdmin: (state) => {
       state.value.username = "";
+
     },
   },
 });
 
+
 export const { loginAdmin, logoutAdmin } = adminSlice.actions;
+
 export default adminSlice.reducer;

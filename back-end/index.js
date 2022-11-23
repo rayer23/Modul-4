@@ -12,12 +12,17 @@ server.use(cors());
 server.use(express.static("./upload"));
 server.use(bearerToken());
 
+
 const { user,book,cart,admin,loan } = require("./routers");
+
+
 server.use("/users", user);
 server.use("/books", book);
 server.use("/carts", cart);
 server.use("/admins", admin);
+
 server.use("/loans", loan);
+
 
 server.listen(PORT, () => {
   // db.sequelize.sync({ alter: true });

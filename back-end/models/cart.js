@@ -16,7 +16,9 @@ module.exports = (sequelize, DataTypes) => {
     Cart.init(
         {
             note: {
+
                 type: DataTypes.TEXT,
+
                 allowNull: true,
             },
         },

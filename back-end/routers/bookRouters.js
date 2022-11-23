@@ -6,6 +6,7 @@ const { multerUpload } = require("../helpers/multer");
 router.get("/", book.findAll);
 router.get("/filter2", book.filter);
 router.get("/searchb", book.searchBook);
+
 router.post("/", book.addBook);
 router.patch("/:id", book.updateBook);
 router.delete("/:id", book.deleteBook);
@@ -14,5 +15,6 @@ router.get("/search", book.search);
 router.get("/sort", book.sortBy);
 router.get("/details/:id", book.details);
 router.get("/filter", book.getBy);
+
 
 module.exports = router;

@@ -7,6 +7,13 @@ const { multerUpload } = require("../helpers/multer");
 router.post("/register", user.register);
 router.post("/login", user.login);
 router.get("/keepLogin", user.keepLogin);
+
+// router.post(
+//   "/single-uploaded/:id",
+//   multerUpload.single("file"),
+//   user.uploadFile
+// );
+
 router.post("/verification", verifyToken, user.verification);
 router.post("/changeotp", user.changeOtp);
 

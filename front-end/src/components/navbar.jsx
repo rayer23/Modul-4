@@ -1,3 +1,5 @@
+import { Register } from "./register";
+
 import {
   Box,
   Flex,
@@ -26,10 +28,40 @@ import {
   MenuItem,
 } from "@chakra-ui/react";
 import {
+
+  Box,
+  Flex,
+  Text,
+  IconButton,
+  Button,
+  Stack,
+  Collapse,
+  Icon,
+  Link,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  useColorModeValue,
+  useDisclosure,
+  useBreakpointValue,
+  useColorMode,
+  Image,
+  FormControl,
+  Input,
+  Menu,
+  MenuDivider,
+  MenuButton,
+  Avatar,
+  MenuList,
+  MenuItem,
+} from "@chakra-ui/react";
+import {
+
   HamburgerIcon,
   CloseIcon,
   ChevronDownIcon,
   ChevronRightIcon,
+
   MoonIcon,
   SunIcon,
 } from "@chakra-ui/icons";
@@ -43,18 +75,21 @@ import { useRef, useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
+
 import { loanDel, loanSync } from "../redux/loanSlice";
 import { cartSync, cartDel } from "../redux/cartSlice";
+
 
 export default function NavbarComp() {
   const { NIM, username, email, isVerified } = useSelector(
     (state) => state.userSlice.value
   );
+
   const { isOpen, onToggle, onClose, onOpen } = useDisclosure();
   //   const { colorMode, toggleColorMode } = useColorMode();
   const tokenlocalstorage = localStorage.getItem("token");
   const dispatch = useDispatch();
-    
+
   let [token, setToken] = useState("");
   let navigate = useNavigate();
 
@@ -83,6 +118,7 @@ export default function NavbarComp() {
         },
       });
       setTimeout(() => navigate(`/verification/${result.data.token}`), 2000);
+
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -90,6 +126,7 @@ export default function NavbarComp() {
         text: error.response.data.name
         ? error.response.data.errors[0].message
         : error.response.data,
+
         customClass: {
           container: "my-swal",
         },
@@ -160,11 +197,13 @@ export default function NavbarComp() {
               <MenuItem>{username}</MenuItem>
               <MenuItem>{NIM}</MenuItem>
               <MenuDivider />
+
               {/* <MenuItem>Profile</MenuItem> */}
               {isVerified ? (
                 ""
               ) : (
                 <MenuItem onClick={onVerification}>Verification Account</MenuItem>
+
               )}
               <MenuItem as={Link2} to="/" onClick={onLogout}>
                 Log Out
@@ -461,6 +500,7 @@ const MobileNavItem = ({ label, children, href }) => {
 };
 
 const NAV_ITEMS = [
+
   // {
   //   label: "Inspiration",
   //   children: [
@@ -491,5 +531,6 @@ const NAV_ITEMS = [
   //     },
   //   ],
   // },
+
 ];
 

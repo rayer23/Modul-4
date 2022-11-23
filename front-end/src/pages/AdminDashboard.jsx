@@ -1,8 +1,10 @@
+
 import { useEffect, useRef } from "react";
 import React from "react";
 import Axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { syncData } from "../redux/listSlice";
+
 import {
   Image,
   Button,
@@ -33,6 +35,7 @@ import {
   Heading,
 } from "@chakra-ui/react";
 
+
 import { syncName } from "../redux/nameSlice";
 import { logoutAdmin } from "../redux/adminSlice";
 import { EditIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
@@ -43,6 +46,7 @@ import AllBook from "../components/allbook";
 import CreateBook from "../components/admin/createbook";
 import Stats from "../components/admin/stats";
 
+
 export const AdminDashboard = () => {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.listSlice.value);
@@ -51,6 +55,7 @@ export const AdminDashboard = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
+
   const inputTitle = useRef("");
   const inputAuthor = useRef("");
   const inputPublisher = useRef("");
@@ -60,6 +65,7 @@ export const AdminDashboard = () => {
   const onLogout = () => {
     dispatch(logoutAdmin());
     localStorage.removeItem("tokenAdmin");
+
     navigate("/admin");
   };
 
@@ -79,7 +85,9 @@ export const AdminDashboard = () => {
 
   const getUser = async () => {
     try {
+
       const res = await Axios.get(`http://localhost:2000/users/allUser`);
+
       console.log(res.data);
       dispatch(syncName(res.data));
     } catch (err) {
@@ -90,6 +98,7 @@ export const AdminDashboard = () => {
   useEffect(() => {
     getUser();
   }, []);
+
 
   const onDelete = async (id) => {
     try {
@@ -125,6 +134,7 @@ export const AdminDashboard = () => {
       console.log(err);
     }
   };
+
 
   return (
     <div>
@@ -173,7 +183,9 @@ export const AdminDashboard = () => {
           </Flex>
         </Flex>
       </Box>
+
       <Stats />
+
 
       <Stack mt="20px" mb="20px" ml="20px" mr="20px">
         <Box m="20px">
@@ -186,15 +198,18 @@ export const AdminDashboard = () => {
                   <Th>Author</Th>
                   <Th>Genre</Th>
                   <Th>Publisher</Th>
+
                   <Th>Stock</Th>
                   <Th>Images</Th>
                   <Th>Actions</Th>
+
                 </Tr>
               </Thead>
               {data.map((item) => {
                 return (
                   <Tbody>
                     <Tr>
+
                       <Td>{item.Title}</Td>
                       <Td>{item.author}</Td>
                       <Td>{item.genre}</Td>
@@ -221,6 +236,7 @@ export const AdminDashboard = () => {
                           </Button>
                         </Flex>
                       </Td>
+
                     </Tr>
                   </Tbody>
                 );
@@ -253,15 +269,18 @@ export const AdminDashboard = () => {
               })}
             </Table>
           </TableContainer>
+
           <CreateBook />
 
           {/* <UpdateComp /> */}
           <AllBook/>
+
         </Box>
       </Stack>
     </div>
   );
 };
+
 
 // return (
 //   <Flex
@@ -343,3 +362,4 @@ export const AdminDashboard = () => {
 //     </Stack>
 //   </Flex>
 // );
+

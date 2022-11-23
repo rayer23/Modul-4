@@ -134,27 +134,27 @@ module.exports = {
     try {
       const { page, limit, search_query, order, order_direction } = req.query;
       const booklist_page = parseInt(page) || 0;
-      const list_limit = parseInt(limit) || 10;
-      const search = search_query || "";
+      const list_limit = parseInt(limit) || 5;
+      const search = search_query || '';
       const offset = list_limit * booklist_page;
-      const orderby = order || "title";
-      const direction = order_direction || "ASC";
+      const orderby = order || 'Title';
+      const direction = order_direction || 'ASC';
       const totalRows = await book.count({
         where: {
           [Op.or]: [
             {
-              title: {
-                [Op.like]: "%" + search + "%",
+              Title: {
+                [Op.like]: '%' + search + '%',
               },
             },
             {
-              author: {
-                [Op.like]: "%" + search + "%",
+              Author: {
+                [Op.like]: '%' + search + '%',
               },
             },
             {
-              publisher: {
-                [Op.like]: "%" + search + "%",
+              Publisher: {
+                [Op.like]: '%' + search + '%',
               },
             },
           ],
@@ -166,23 +166,25 @@ module.exports = {
           {
             model: cart,
             attributes: ["id", "UserNIM"],
+
           },
+
         ],
         where: {
           [Op.or]: [
             {
-              title: {
-                [Op.like]: "%" + search + "%",
+              Title: {
+                [Op.like]: '%' + search + '%',
               },
             },
             {
-              author: {
-                [Op.like]: "%" + search + "%",
+              Author: {
+                [Op.like]: '%' + search + '%',
               },
             },
             {
-              publisher: {
-                [Op.like]: "%" + search + "%",
+              Publisher: {
+                [Op.like]: '%' + search + '%',
               },
             },
           ],
@@ -194,7 +196,9 @@ module.exports = {
           {
             model: cart,
             attributes: ["id", "UserNIM"],
+
           },
+
         ],
       });
 
@@ -234,6 +238,7 @@ module.exports = {
       res.status(400).send(err);
     }
   },
+
   getBy: async (req, res) => {
     try {
       const { title, genre, publisher, author } = req.query;
@@ -260,4 +265,5 @@ module.exports = {
       res.status(400).send(err);
     }
   },
+
 };

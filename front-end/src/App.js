@@ -1,8 +1,10 @@
+
 import HomePage from "./pages/HomePage";
 import { VerificationPage } from "./pages/VerificationPage";
 import DetailPage from "./pages/DetailPage";
 import { AdminPage } from "./pages/AdminPage";
 import { AdminDashboard } from "./pages/AdminDashboard";
+
 import CartPage from "./pages/CartPage";
 import LoanPage from "./pages/LoanPage";
 
@@ -14,6 +16,7 @@ import { loginAdmin } from "./redux/adminSlice";
 
 import Axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
+
 import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
@@ -21,7 +24,9 @@ import "./App.css";
 function App() {
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
+
   const tokenAdmin = localStorage.getItem("tokenAdmin");
+
   const keepLogin = async () => {
     try {
       const res = await Axios.get(`http://localhost:2000/users/keepLogin`, {
@@ -29,6 +34,7 @@ function App() {
           Authorization: `Bearer ${token}`,
         },
       });
+
 
       const result = await Axios.get(
         `http://localhost:2000/carts/${res.data.NIM}`
@@ -41,6 +47,7 @@ function App() {
       dispatch(loanSync(loan.data));
 
 
+
       dispatch(
         login({
           NIM: res.data.NIM,
@@ -48,6 +55,7 @@ function App() {
           email: res.data.email,
           isVerified: res.data.isVerified,
           cart: result.data.length,
+
           loan: loan.data.length,
         })
       );
@@ -66,6 +74,7 @@ function App() {
       dispatch(
         loginAdmin({
           username: res.data.username,
+
         })
       );
     } catch (err) {
@@ -73,7 +82,25 @@ function App() {
     }
   };
 
+const keepLoginAdmin = async () => {
+    try {
+      const res = await Axios.get(`http://localhost:2000/admins/keepLogin`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      dispatch(
+        login({
+          username: res.data.username,
+          isVerified: res.data.isVerified,
+        })
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
+
     tokenAdmin
       ? keepLoginAdmin()
       : token
@@ -123,6 +150,7 @@ function App() {
         />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/dashboard" element={<AdminDashboard />} />
+
       </Routes>
     </div>
   );
